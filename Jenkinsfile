@@ -1,21 +1,33 @@
-def REPOSITORY_URL = "https://github.com/stivenquirozc/movie-analyst-api.git"
-def PATHREPOSITORY = "movie-analyst-api"
-
 pipeline {
-
-agent { docker 'node' }
-
-stages('code checkout') {
-    git clone "${REPOSITORY_URL}"
-    dir('${PATHREPOSITORY}')
-    git checkout
-    }
-
-    stage('Build') {
+  agent  {label "principal"}
+    
+  stages {
         
-        steps {
-           
-        }
+    stage('Git') {
+      steps {
+        git 'https://github.com/stivenquirozc/movie-analyst-api.git'
+      }
     }
-
+     
+    stage('Build') {
+      steps {
+        sh "npm update"
+        sh "npm install"
+        sh "npm build"
+        
+      }
+    }  
+    
+            
+    stage('Test') {
+      steps {
+        sh "npm test"
+        sh "echo tryed..."
+      }
+    }
+  }
 }
+
+    
+
+
